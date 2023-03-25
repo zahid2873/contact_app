@@ -29,8 +29,11 @@ class HomePage extends StatelessWidget {
             return ListTile(
               title: Text("${contact.name}"),
               trailing: IconButton(
-                onPressed: (){},
-                icon: Icon(contact.favorite? Icons.favorite:Icons.favorite_border),
+                onPressed: (){
+                  final value = contact.favorite? 0:1;
+                  provider.contactUpdate(contact.id, tblContactColFavorite, value);
+                },
+                icon: Icon(contact.favorite? Icons.favorite:Icons.favorite_border,),
               )
             );},),
       ),

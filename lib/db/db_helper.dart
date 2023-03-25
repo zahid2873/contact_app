@@ -1,5 +1,6 @@
 
 import 'package:contactapp/models/contact_model.dart';
+import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart' as p;
 
@@ -27,6 +28,11 @@ static Future<int> insertConatct(ContactModel contactModel) async{
   final db = await _open();
   return db.insert(tblContact, contactModel.toMap());
 }
+static Future<int> updateContact(int id, Map<String, dynamic>map)async{
+  final db = await _open();
+  return db.update(tblContact, map, where: '$tblContactColId = ?', whereArgs: [id]);
+}
+
 static Future<List<ContactModel>> getAllContact()async{
   final db = await _open();
   final List<Map<String, dynamic>> mapList = await db.query(tblContact);

@@ -1,6 +1,8 @@
 import 'package:contactapp/db/db_helper.dart';
 import 'package:contactapp/models/contact_model.dart';
+import 'package:contactapp/providers/contact_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ContactFormPage extends StatefulWidget {
   static const String routeName = '/form_page';
@@ -148,10 +150,7 @@ class _ContactFormPageState extends State<ContactFormPage> {
         website: _webContoller.text
 
       );
-      DbHelper.insertConatct(contactModel)
-          . catchError((error){
-            print(error.toString());
-      })
+      Provider.of<ContactProvider>(context,listen: false).insertConatct(contactModel)
           .then((value) => Navigator.pop(context));
       print(contactModel);
     }
