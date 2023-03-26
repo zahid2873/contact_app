@@ -39,4 +39,10 @@ static Future<List<ContactModel>> getAllContact()async{
   return List.generate(mapList.length, (index) => ContactModel.fromMap(mapList[index]));
 }
 
+static Future<ContactModel> getContactById(int id)async{
+  final db = await _open();
+  final List<Map<String,dynamic>> mapList = await db.query(tblContact,where: '$tblContactColId=?',whereArgs: [id]);
+  return ContactModel.fromMap(mapList.first);
+}
+
 }

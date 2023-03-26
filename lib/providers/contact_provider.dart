@@ -31,4 +31,9 @@ class ContactProvider extends ChangeNotifier{
     notifyListeners();
 
   }
+
+  Future<ContactModel> getContactById(int id){
+    return DbHelper.getContactById(id);
+  }
+
 }
