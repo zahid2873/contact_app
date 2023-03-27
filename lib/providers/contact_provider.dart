@@ -18,11 +18,11 @@ class ContactProvider extends ChangeNotifier{
   Future<int> contactUpdate(int rowId, String column, dynamic value) async{
     final map = {column :value};
     final id = await DbHelper.updateContact(rowId, map);
-    final contactModel = contactList.firstWhere((element) => element.id==rowId);
-    contactModel.favorite = !contactModel.favorite;
-    final index = contactList.indexOf(contactModel);
-    contactList[index] = contactModel;
-    notifyListeners();
+    // final contactModel = contactList.firstWhere((element) => element.id==rowId);
+    // contactModel.favorite = !contactModel.favorite;
+    // final index = contactList.indexOf(contactModel);
+    // contactList[index] = contactModel;
+    // notifyListeners();
     return id;
   }
 
