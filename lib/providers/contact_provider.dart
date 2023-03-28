@@ -36,4 +36,10 @@ class ContactProvider extends ChangeNotifier{
     return DbHelper.getContactById(id);
   }
 
+  void deleteConatct(int id)async{
+    final rowId = DbHelper.deleteContact(id);
+    contactList.removeWhere((element) => element.id==id);
+    notifyListeners();
+  }
+
 }

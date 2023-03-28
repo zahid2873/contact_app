@@ -45,4 +45,9 @@ static Future<ContactModel> getContactById(int id)async{
   return ContactModel.fromMap(mapList.first);
 }
 
+static Future<int>  deleteContact(int id) async {
+  final db = await _open();
+  return db.delete(tblContact,where: '$tblContactColId=?',whereArgs: [id]);
+}
+
 }

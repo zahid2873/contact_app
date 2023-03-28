@@ -5,10 +5,15 @@ import 'package:contactapp/providers/contact_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   static const String routeName = '/';
   const HomePage({Key? key}) : super(key: key);
 
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     Provider.of<ContactProvider>(context,listen: false).getAllContact();
@@ -27,20 +32,49 @@ class HomePage extends StatelessWidget {
           itemCount: provider.contactList.length,
             itemBuilder: (context,index){
             final contact = provider.contactList[index];
-            return ListTile(
-              onTap: (){
-                Navigator.pushNamed(context, ContactDetailsPage.routeName, arguments: contact);
+            return Dismissible(
+              key: UniqueKey(),
+              direction: DismissDirection.endToStart,
+              background: Container(
+                color: Colors.red,
+                alignment: Alignment.centerRight,
+                padding: EdgeInsets.all(8),
+                child: Icon(Icons.delete),
+              ),
+              confirmDismiss: showDeleteConfirmationDialog,
+              onDismissed: (direction){
+                provider.deleteConatct(contact.id);
               },
-              title: Text("${contact.name}"),
-              trailing: IconButton(
-                onPressed: (){
-                  final value = contact.favorite? 0:1;
-                  provider.contactUpdate(contact.id, tblContactColFavorite, value);
+              child: ListTile(
+                onTap: (){
+                  Navigator.pushNamed(context, ContactDetailsPage.routeName, arguments: contact);
                 },
-                icon: Icon(contact.favorite? Icons.favorite:Icons.favorite_border,),
-              )
+                title: Text("${contact.name}"),
+                trailing: IconButton(
+                  onPressed: (){
+                    final value = contact.favorite? 0:1;
+                    provider.contactUpdate(contact.id, tblContactColFavorite, value);
+                  },
+                  icon: Icon(contact.favorite? Icons.favorite:Icons.favorite_border,),
+                )
+              ),
             );},),
       ),
     );
+  }
+  Future <bool?> showDeleteConfirmationDialog(DismissDirection direction){
+    return showDialog(context: context, builder: (context)=>AlertDialog(
+      title: const Text("Confirm Delete"),
+      content: const Text("Are you sure to delete this contact"),
+      actions: [
+        TextButton(onPressed: (){
+          Navigator.pop(context,false);
+        }, child: Text("Cancel")),
+        TextButton(onPressed: (){
+          Navigator.pop(context,true);
+        }, child: Text("Yes"))
+      ],
+    ));
+
   }
 }
