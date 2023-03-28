@@ -26,10 +26,26 @@ class ContactProvider extends ChangeNotifier{
     return id;
   }
 
+  Future<int> contactFavoriteUpdate(int rowId, String column, dynamic value) async{
+    final map = {column :value};
+    final id = await DbHelper.updateContact(rowId, map);
+    final contactModel = contactList.firstWhere((element) => element.id==rowId);
+    contactModel.favorite = !contactModel.favorite;
+    final index = contactList.indexOf(contactModel);
+    contactList[index] = contactModel;
+    notifyListeners();
+    return id;
+  }
+
   getAllContact()async{
     contactList = await DbHelper.getAllContact();
     notifyListeners();
 
+  }
+
+  getFavoriteContact()async{
+    contactList = await DbHelper.getFavoriteContact();
+    notifyListeners();
   }
 
   Future<ContactModel> getContactById(int id){

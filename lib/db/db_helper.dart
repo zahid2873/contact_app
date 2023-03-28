@@ -45,6 +45,12 @@ static Future<ContactModel> getContactById(int id)async{
   return ContactModel.fromMap(mapList.first);
 }
 
+static Future<List<ContactModel>> getFavoriteContact()async{
+  final db = await _open();
+  final List<Map<String,dynamic>> maplist = await db.query(tblContact,where: '$tblContactColFavorite=?',whereArgs: [1]);
+  return List.generate(maplist.length, (index)=>ContactModel.fromMap(maplist[index]));
+}
+
 static Future<int>  deleteContact(int id) async {
   final db = await _open();
   return db.delete(tblContact,where: '$tblContactColId=?',whereArgs: [id]);

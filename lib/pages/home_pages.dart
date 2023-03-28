@@ -14,10 +14,16 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  int index = 0;
+  @override
+  void didChangeDependencies() {
+    Provider.of<ContactProvider>(context,listen: false).getAllContact();
+    super.didChangeDependencies();
+  }
   @override
   Widget build(BuildContext context) {
-    Provider.of<ContactProvider>(context,listen: false).getAllContact();
     return Scaffold(
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
         onPressed: (){
           Navigator.pushNamed(context, ContactFormPage.routeName);
@@ -25,8 +31,29 @@ class _HomePageState extends State<HomePage> {
         child: const Icon(Icons.add),
       ),
       appBar: AppBar(
-        title: Text("Contact List"),
+        title: const Text("Contact List"),
       ),
+      bottomNavigationBar: BottomAppBar(
+        shape: const CircularNotchedRectangle(),
+        notchMargin: 5,
+        clipBehavior: Clip.antiAlias,
+        elevation: 20,
+
+        child: BottomNavigationBar(
+          currentIndex: index,
+          onTap: (value){
+            setState(() {
+              index=value;
+            });
+            _fetchData();
+          },
+          items: const[
+            BottomNavigationBarItem(icon: Icon(Icons.contacts),label: "All Contacts"),
+            BottomNavigationBarItem(icon: Icon(Icons.favorite),label: "Favourite"),
+          ],
+        ),
+      ),
+
       body: Consumer<ContactProvider>(
         builder:(context,provider,child)=> ListView.builder(
           itemCount: provider.contactList.length,
@@ -38,8 +65,8 @@ class _HomePageState extends State<HomePage> {
               background: Container(
                 color: Colors.red,
                 alignment: Alignment.centerRight,
-                padding: EdgeInsets.all(8),
-                child: Icon(Icons.delete),
+                padding: const EdgeInsets.all(8),
+                child: const Icon(Icons.delete),
               ),
               confirmDismiss: showDeleteConfirmationDialog,
               onDismissed: (direction){
@@ -53,7 +80,7 @@ class _HomePageState extends State<HomePage> {
                 trailing: IconButton(
                   onPressed: (){
                     final value = contact.favorite? 0:1;
-                    provider.contactUpdate(contact.id, tblContactColFavorite, value);
+                    provider.contactFavoriteUpdate(contact.id, tblContactColFavorite, value);
                   },
                   icon: Icon(contact.favorite? Icons.favorite:Icons.favorite_border,),
                 )
@@ -69,12 +96,20 @@ class _HomePageState extends State<HomePage> {
       actions: [
         TextButton(onPressed: (){
           Navigator.pop(context,false);
-        }, child: Text("Cancel")),
+        }, child: const  Text("Cancel")),
         TextButton(onPressed: (){
           Navigator.pop(context,true);
-        }, child: Text("Yes"))
+        }, child: const Text("Yes"))
       ],
     ));
 
   }
+
+   _fetchData() {
+    if(index==0){
+      Provider.of<ContactProvider>(context,listen: false).getAllContact();
+    }else{
+      Provider.of<ContactProvider>(context,listen: false).getFavoriteContact();
+    }
+   }
 }
