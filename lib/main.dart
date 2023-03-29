@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'pages/home_pages.dart';
+import 'pages/scan_page.dart';
 
 void main() {
   runApp( ChangeNotifierProvider(
@@ -29,6 +30,7 @@ class MyApp extends StatelessWidget {
       initialRoute: HomePage.routeName,
       routes: {
         HomePage.routeName : (context)=>HomePage(),
+        ScanPage.routeName : (context)=>ScanPage(),
         ContactFormPage.routeName :(context)=>ContactFormPage(),
         ContactDetailsPage.routeName : (context) =>ContactDetailsPage(),
       },

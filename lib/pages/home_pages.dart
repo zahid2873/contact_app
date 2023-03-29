@@ -1,6 +1,7 @@
 import 'package:contactapp/models/contact_model.dart';
 import 'package:contactapp/pages/contact_details-page.dart';
 import 'package:contactapp/pages/contact_form_page.dart';
+import 'package:contactapp/pages/scan_page.dart';
 import 'package:contactapp/providers/contact_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -26,7 +27,7 @@ class _HomePageState extends State<HomePage> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
         onPressed: (){
-          Navigator.pushNamed(context, ContactFormPage.routeName);
+          Navigator.pushNamed(context, ScanPage.routeName);
         },
         child: const Icon(Icons.add),
       ),
