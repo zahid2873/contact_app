@@ -14,6 +14,14 @@ class ScanPage extends StatefulWidget {
 
 class _ScanPageState extends State<ScanPage> {
   List<String> lines= [];
+  String name = '',
+      mobile = '',
+      email = '',
+      address = '',
+      company = '',
+      designation = '',
+      website = '',
+      image = '';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -71,8 +79,26 @@ class LineItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Chip(
-      label: Text(line),
+    final GlobalKey _globalKey = GlobalKey();
+
+    return LongPressDraggable<String>(
+      data: line,
+      dragAnchorStrategy: childDragAnchorStrategy,
+      feedback: Container(
+        key: _globalKey,
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: Colors.black45,
+        ),
+        child: Text(line,
+            style: Theme.of(context)
+                .textTheme
+                .subtitle1!
+                .copyWith(color: Colors.white)),
+      ),
+      child: Chip(
+        label: Text(line),
+      ),
     );
   }
 }
