@@ -1,16 +1,28 @@
+class ContactProperties {
+  static const String name = "Name";
+  static const String mobile = "Mobile";
+  static const String email = "Email";
+  static const String address = "Address";
+  static const String company = "Company";
+  static const String designation = "Designation";
+  static const String website = "Website";
+}
+
+
+
 import 'dart:io';
 
+import 'package:contact_app_pb_bitm/pages/contact_form_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../custom_widget/drag_target_item.dart';
+import '../customwidgets/drag_target_item.dart';
 import '../models/contact_model.dart';
 import '../utils/constants.dart';
-import 'contact_form_page.dart';
 
 class ScanPage extends StatefulWidget {
-  static const String routeName= '/scan';
+  static const String routeName = '/scan';
   const ScanPage({Key? key}) : super(key: key);
 
   @override
@@ -18,7 +30,8 @@ class ScanPage extends StatefulWidget {
 }
 
 class _ScanPageState extends State<ScanPage> {
-  List<String> lines= [];
+  bool isScanOver = false;
+  List<String> lines = [];
   String name = '',
       mobile = '',
       email = '',
@@ -31,32 +44,39 @@ class _ScanPageState extends State<ScanPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Scan Card"),
+        title: const Text('Scan Card'),
         actions: [
           TextButton(
             style: TextButton.styleFrom(
-              foregroundColor: Colors.white
+                foregroundColor: Colors.white
             ),
-              onPressed: (){
-            _createContactModelFromScannedValues();
-          }, child: Text("NEXT"))
+            onPressed: _createContactModelFromScannedValues,
+            child: const Text('NEXT'),
+          )
         ],
-
       ),
       body: ListView(
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              TextButton.icon(onPressed: (){
-                getImage(ImageSource.camera);
-              }, icon: const Icon(Icons.camera), label: const Text("Capture")),
-              TextButton.icon(onPressed: (){
-                getImage(ImageSource.gallery);
-              }, icon: const Icon(Icons.photo_album), label: const Text("Gallery")),
+              TextButton.icon(
+                onPressed: () {
+                  getImage(ImageSource.camera);
+                },
+                icon: const Icon(Icons.camera),
+                label: const Text('Capture'),
+              ),
+              TextButton.icon(
+                onPressed: () {
+                  getImage(ImageSource.gallery);
+                },
+                icon: const Icon(Icons.photo_album),
+                label: const Text('Gallery'),
+              ),
             ],
           ),
-          Card(
+          if(isScanOver) Card(
             elevation: 5,
             child: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -73,23 +93,27 @@ class _ScanPageState extends State<ScanPage> {
               ),
             ),
           ),
+          if(isScanOver) Padding(
+            padding: const EdgeInsets.all(8),
+            child: const Text('Long press and Drag each item from the below list and drop above in the appropriate box. You can drop multiple items over a single box.'),
+          ),
           Wrap(
-            children: lines.map((line) => LineItem(line: line,)).toList(),
-          )
+            children: lines.map((line) => LineItem(line: line)).toList(),
+          ),
         ],
       ),
     );
   }
 
-  Future<void> getImage(ImageSource source) async{
-    final pickedFile  = await ImagePicker().pickImage(source: source);
-    if(pickedFile !=null){
+  Future<void> getImage(ImageSource source) async {
+    final pickedFile = await ImagePicker().pickImage(source: source);
+    if(pickedFile != null) {
       final textRecognizer = GoogleMlKit.vision.textRecognizer();
       final recognizedText = await textRecognizer
           .processImage(InputImage.fromFile(File(pickedFile.path)));
-      // setState(() {
-      //   isScanOver = true;
-      // });
+      setState(() {
+        isScanOver = true;
+      });
       final tempList = <String>[];
       for (var block in recognizedText.blocks) {
         for (var line in block.lines) {
@@ -102,6 +126,7 @@ class _ScanPageState extends State<ScanPage> {
       });
     }
   }
+
   void _getPropertyValue(String property, String value) {
     switch (property) {
       case ContactProperties.name:
@@ -127,6 +152,7 @@ class _ScanPageState extends State<ScanPage> {
         break;
     }
   }
+
   void _createContactModelFromScannedValues() {
     final contact = ContactModel(
       name: name,
@@ -139,21 +165,15 @@ class _ScanPageState extends State<ScanPage> {
     );
     Navigator.pushNamed(context, ContactFormPage.routeName, arguments: contact);
   }
-
-
 }
-
-
-
 
 class LineItem extends StatelessWidget {
   final String line;
-  const LineItem({Key? key,required this.line}) : super(key: key);
+  const LineItem({Key? key, required this.line}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final GlobalKey _globalKey = GlobalKey();
-
     return LongPressDraggable<String>(
       data: line,
       dragAnchorStrategy: childDragAnchorStrategy,
