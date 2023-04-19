@@ -18,6 +18,7 @@ class ScanPage extends StatefulWidget {
 }
 
 class _ScanPageState extends State<ScanPage> {
+  bool isScanOver = false;
   List<String> lines= [];
   String name = '',
       mobile = '',
@@ -56,7 +57,7 @@ class _ScanPageState extends State<ScanPage> {
               }, icon: const Icon(Icons.photo_album), label: const Text("Gallery")),
             ],
           ),
-          Card(
+          if(isScanOver) Card(
             elevation: 5,
             child: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -73,6 +74,10 @@ class _ScanPageState extends State<ScanPage> {
               ),
             ),
           ),
+          if(isScanOver) Padding(
+            padding: const EdgeInsets.all(8),
+            child: const Text('Long press and Drag each item from the below list and drop above in the appropriate box. You can drop multiple items over a single box.'),
+          ),
           Wrap(
             children: lines.map((line) => LineItem(line: line,)).toList(),
           )
@@ -87,9 +92,9 @@ class _ScanPageState extends State<ScanPage> {
       final textRecognizer = GoogleMlKit.vision.textRecognizer();
       final recognizedText = await textRecognizer
           .processImage(InputImage.fromFile(File(pickedFile.path)));
-      // setState(() {
-      //   isScanOver = true;
-      // });
+      setState(() {
+        isScanOver = true;
+      });
       final tempList = <String>[];
       for (var block in recognizedText.blocks) {
         for (var line in block.lines) {

@@ -1,5 +1,6 @@
 import 'package:contactapp/db/db_helper.dart';
 import 'package:contactapp/models/contact_model.dart';
+import 'package:contactapp/pages/home_pages.dart';
 import 'package:contactapp/providers/contact_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -13,14 +14,27 @@ class ContactFormPage extends StatefulWidget {
 }
 
 class _ContactFormPageState extends State<ContactFormPage> {
-  final _nameContoller = TextEditingController();
-  final _designationContoller = TextEditingController();
-  final _companyContoller = TextEditingController();
-  final _addressContoller = TextEditingController();
-  final _emailContoller = TextEditingController();
-  final _mobileContoller = TextEditingController();
-  final _webContoller = TextEditingController();
+  final _nameController = TextEditingController();
+  final _designationController = TextEditingController();
+  final _companyController = TextEditingController();
+  final _addressController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _mobileController = TextEditingController();
+  final _webController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+
+  @override
+  void didChangeDependencies() {
+    final contact = ModalRoute.of(context)!.settings.arguments as ContactModel;
+    _nameController.text = contact.name;
+    _designationController.text = contact.designation;
+    _companyController.text = contact.company;
+    _mobileController.text = contact.mobile;
+    _emailController.text = contact.email;
+    _addressController.text = contact.address;
+    _webController.text = contact.website;
+    super.didChangeDependencies();
+  }
 
 
   @override
@@ -39,7 +53,7 @@ class _ContactFormPageState extends State<ContactFormPage> {
           padding: EdgeInsets.all(16),
           children: [
             TextFormField(
-              controller: _nameContoller,
+              controller: _nameController,
               decoration: InputDecoration(
                 prefixIcon: Icon(Icons.person),
                 labelText:  "Contact Name",
@@ -57,7 +71,7 @@ class _ContactFormPageState extends State<ContactFormPage> {
             ),
             TextFormField(
               keyboardType: TextInputType.phone,
-              controller: _mobileContoller,
+              controller: _mobileController,
               decoration: InputDecoration(
                 prefixIcon: Icon(Icons.call),
                 labelText: "Mobile Number",
@@ -72,7 +86,7 @@ class _ContactFormPageState extends State<ContactFormPage> {
             ),
             TextFormField(
               keyboardType: TextInputType.emailAddress,
-              controller: _emailContoller,
+              controller: _emailController,
               decoration: InputDecoration(
                   prefixIcon: Icon(Icons.email),
                   labelText: "Email Address (Optional)",
@@ -80,7 +94,7 @@ class _ContactFormPageState extends State<ContactFormPage> {
               ),
             ),
             TextFormField(
-              controller: _designationContoller,
+              controller: _designationController,
               decoration: InputDecoration(
                 prefixIcon: Icon(Icons.person),
                 labelText: "Designation (Optional)",
@@ -91,7 +105,7 @@ class _ContactFormPageState extends State<ContactFormPage> {
               },
             ),
             TextFormField(
-              controller: _companyContoller,
+              controller: _companyController,
               decoration: InputDecoration(
                 prefixIcon: Icon(Icons.person),
                 labelText: "Company Name (Optional)",
@@ -102,7 +116,7 @@ class _ContactFormPageState extends State<ContactFormPage> {
               },
             ),
             TextFormField(
-              controller: _addressContoller,
+              controller: _addressController,
               decoration: InputDecoration(
                 prefixIcon: Icon(Icons.home_sharp),
                 labelText: "Address (Optional)",
@@ -110,7 +124,7 @@ class _ContactFormPageState extends State<ContactFormPage> {
               ),
             ),
               TextFormField(
-              controller: _webContoller,
+              controller: _webController,
               decoration: InputDecoration(
                 prefixIcon: Icon(Icons.web),
                 labelText: "Website (Optional)",
@@ -127,13 +141,13 @@ class _ContactFormPageState extends State<ContactFormPage> {
   @override
   void dispose() {
     // TODO: implement dispose
-    _nameContoller.dispose();
-    _designationContoller.dispose();
-    _companyContoller.dispose();
-    _addressContoller.dispose();
-    _emailContoller.dispose();
-    _mobileContoller.dispose();
-    _webContoller.dispose();
+    _nameController.dispose();
+    _designationController.dispose();
+    _companyController.dispose();
+    _addressController.dispose();
+    _emailController.dispose();
+    _mobileController.dispose();
+    _webController.dispose();
     super.dispose();
   }
 
@@ -141,17 +155,17 @@ class _ContactFormPageState extends State<ContactFormPage> {
     if(_formKey.currentState!.validate()){
       //save data to database
       final contactModel = ContactModel(
-        name: _nameContoller.text,
-        mobile: _mobileContoller.text,
-        email: _emailContoller.text,
-        designation: _designationContoller.text,
-        company: _companyContoller.text,
-        address: _addressContoller.text,
-        website: _webContoller.text
+        name: _nameController.text,
+        mobile: _mobileController.text,
+        email: _emailController.text,
+        designation: _designationController.text,
+        company: _companyController.text,
+        address: _addressController.text,
+        website: _webController.text
 
       );
       Provider.of<ContactProvider>(context,listen: false).insertConatct(contactModel)
-          .then((value) => Navigator.pop(context));
+          .then((value) => Navigator.popUntil(context, ModalRoute.withName(HomePage.routeName)));
       print(contactModel);
     }
 
