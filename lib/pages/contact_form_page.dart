@@ -22,10 +22,11 @@ class _ContactFormPageState extends State<ContactFormPage> {
   final _mobileController = TextEditingController();
   final _webController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  late ContactModel contact;
 
   @override
   void didChangeDependencies() {
-    final contact = ModalRoute.of(context)!.settings.arguments as ContactModel;
+     contact = ModalRoute.of(context)!.settings.arguments as ContactModel;
     _nameController.text = contact.name;
     _designationController.text = contact.designation;
     _companyController.text = contact.company;
@@ -154,21 +155,29 @@ class _ContactFormPageState extends State<ContactFormPage> {
   void _save() {
     if(_formKey.currentState!.validate()){
       //save data to database
-      final contactModel = ContactModel(
-        name: _nameController.text,
-        mobile: _mobileController.text,
-        email: _emailController.text,
-        designation: _designationController.text,
-        company: _companyController.text,
-        address: _addressController.text,
-        website: _webController.text
+      contact.name = _nameController.text;
+      contact.mobile = _mobileController.text;
+      contact.email = _emailController.text;
+      contact.designation = _designationController.text;
+      contact.company = _companyController.text;
+      contact.address = _addressController.text;
+      contact.website = _webController.text;
 
-      );
-      Provider.of<ContactProvider>(context,listen: false).insertConatct(contactModel)
+
+      // final contactModel = ContactModel(
+      //   name: _nameController.text,
+      //   mobile: _mobileController.text,
+      //   email: _emailController.text,
+      //   designation: _designationController.text,
+      //   company: _companyController.text,
+      //   address: _addressController.text,
+      //   website: _webController.text
+      //
+      // );
+      Provider.of<ContactProvider>(context,listen: false).insertConatct(contact)
           .then((value) => Navigator.popUntil(context, ModalRoute.withName(HomePage.routeName)));
-      print(contactModel);
+      //print(contact);
     }
-
   }
 
 }

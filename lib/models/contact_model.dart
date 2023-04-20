@@ -35,7 +35,7 @@ class ContactModel{
       tblContactColCompany : company,
       tblContactColAddress : address,
       tblContactColWebsite : website,
-      tblContactColWebsite : image,
+      tblContactColImage : image,
       tblContactColFavorite : favorite? 1:0,
 
 

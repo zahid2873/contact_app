@@ -50,7 +50,8 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
              final contact = snapshot.data!;
              return ListView(
               children: [
-                Image.asset("images/man-person-icon.png",height: 200,width: 200,),
+                contact.image.isEmpty ? Image.asset("images/man-person-icon.png",height: 200,width: 200,):
+                Image.file(File(contact.image),width: double.infinity,height: 200,fit: BoxFit.cover,),
                 ListTile(
                   leading: IconButton(onPressed: (){
                     showSingleTextInputDialog(

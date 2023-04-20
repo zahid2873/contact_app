@@ -142,6 +142,7 @@ class _ScanPageState extends State<ScanPage> {
       company: company,
       designation: designation,
       website: website,
+      image: image,
     );
     Navigator.pushNamed(context, ContactFormPage.routeName, arguments: contact);
   }
