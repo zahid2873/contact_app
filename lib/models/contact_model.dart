@@ -8,6 +8,7 @@ String tblContactColCompany ='company';
 String tblContactColAddress ='address';
 String tblContactColWebsite = 'website';
 String tblContactColFavorite ='favorite';
+String tblContactColImage ='image';
 
 
 class ContactModel{
@@ -19,10 +20,11 @@ class ContactModel{
   String company;
   String address;
   String website;
+  String image;
   bool favorite;
 
   ContactModel({this.id=-1, required this.name, required this.mobile, this.email='', this.designation='',
-      this.company='', this.address='', this.website='',this.favorite=false});
+      this.company='', this.address='', this.website='',this.image='',this.favorite=false});
 
   Map<String, dynamic> toMap(){
     final map = <String, dynamic> {
@@ -33,6 +35,7 @@ class ContactModel{
       tblContactColCompany : company,
       tblContactColAddress : address,
       tblContactColWebsite : website,
+      tblContactColWebsite : image,
       tblContactColFavorite : favorite? 1:0,
 
 
@@ -52,11 +55,12 @@ class ContactModel{
     company: map[tblContactColCompany],
     address: map[tblContactColAddress],
     website: map[tblContactColWebsite],
+    image: map[tblContactColImage] ?? "",
     favorite: map[tblContactColFavorite] == 1? true : false,
   );
 
   @override
   String toString() {
-    return 'ContactModel{id: $id, name: $name, mobile: $mobile, email: $email, designation: $designation, company: $company, address: $address, website: $website}';
+    return 'ContactModel{id: $id, name: $name, mobile: $mobile, email: $email, designation: $designation, company: $company, address: $address, website: $website, image: $image, favorite: $favorite}';
   }
 }

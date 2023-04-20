@@ -14,13 +14,18 @@ static  String _createTableContact = '''CREATE TABLE $tblContact(
   $tblContactColCompany TEXT, 
   $tblContactColAddress TEXT, 
   $tblContactColWebsite TEXT, 
+  $tblContactColImage TEXT,
   $tblContactColFavorite INTEGER)''';
 
 static Future<Database> _open() async {
   final rootPath = await getDatabasesPath();
   final dbPath = p.join('contact.db');
-  return openDatabase(dbPath,version: 1, onCreate: (db,version){
+  return openDatabase(dbPath,version: 2, onCreate: (db,version){
     db.execute(_createTableContact);
+  },onUpgrade: (db, oldVersion, newVersion){
+    if(newVersion == 2){
+      db.execute('alter table $tblContact add column $tblContactColImage text');
+    }
   });
 }
 

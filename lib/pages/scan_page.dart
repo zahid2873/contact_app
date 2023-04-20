@@ -89,6 +89,7 @@ class _ScanPageState extends State<ScanPage> {
   Future<void> getImage(ImageSource source) async{
     final pickedFile  = await ImagePicker().pickImage(source: source);
     if(pickedFile !=null){
+      image = pickedFile.path;
       final textRecognizer = GoogleMlKit.vision.textRecognizer();
       final recognizedText = await textRecognizer
           .processImage(InputImage.fromFile(File(pickedFile.path)));
