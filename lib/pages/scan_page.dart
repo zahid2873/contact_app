@@ -46,6 +46,12 @@ class _ScanPageState extends State<ScanPage> {
       ),
       body: ListView(
         children: [
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            alignment: Alignment.center,
+            color: Colors.black54,
+            child: const Text("Take a image through camera or gallery",style: TextStyle(color: Colors.white,fontSize: 14),),
+          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
